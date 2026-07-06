@@ -156,22 +156,27 @@ Update your `src/services/firebaseConfig.js` to connect to local emulators when 
 
 ## Environment Variables
 
-Create a `.env` file in the project root with the following variables:
+Copy `.env.example` to `.env` in the project root and fill in real values (`.env` is gitignored):
 
 ```env
 # Firebase Configuration
-EXPO_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
-EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-EXPO_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_firebase_app_id
 
-# WebSocket Configuration
-EXPO_PUBLIC_WEBSOCKET_URL=your_websocket_url
+# Google Maps (read by app.config.js for Expo/iOS, and by
+# android/local.properties for the native Android build)
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
 
-# BLE Configuration (optional)
-EXPO_PUBLIC_BLE_SERVICE_UUID=your_ble_service_uuid
+For a native Android build (`npm run android` / opening `android/` directly), also add the
+same key to `android/local.properties` (also gitignored):
+
+```properties
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 ```
 
 ## Troubleshooting
