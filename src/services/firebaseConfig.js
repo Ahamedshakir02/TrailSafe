@@ -1,5 +1,6 @@
+import { Platform } from "react-native";
 import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -41,10 +42,11 @@ const app = initializeApp(firebaseConfig);
 
 // Firestore's IndexedDB persistence and firebase/analytics are browser-only APIs
 // and are not available in React Native, so they are intentionally not used here.
-// getReactNativePersistence keeps the signed-in user across app restarts.
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+// getReactNativePersistence only exists in firebase/auth's React Native build, not
+// its web build, so it must stay behind a platform check to avoid crashing web.
+const auth = Platform.OS === "web"
+  ? getAuth(app)
+  : initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 const db = getFirestore(app);
 
 export { auth, db };
