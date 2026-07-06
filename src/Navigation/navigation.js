@@ -14,6 +14,7 @@ import AddDeviceScreen from "../Screens/AddDeviceScreen";
 import ConnectionScreen from "../Screens/ConnectionScreen"; // New screen
 import BLEScreen from "../Screens/BLEScreen"; // New screen
 import WebSocketScreen from "../Screens/WebSocketScreen"; // New screen
+import DeviceDetailsScreen from "../Screens/DeviceDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -71,6 +72,7 @@ const Navigation = () => {
           <Stack.Screen name="ConnectionScreen" component={ConnectionScreen} />
           <Stack.Screen name="BLEScreen" component={BLEScreen} />
           <Stack.Screen name="WebSocketScreen" component={WebSocketScreen} />
+          <Stack.Screen name="DeviceDetails" component={DeviceDetailsScreen} />
         </>
       ) : (
         <>

@@ -4,18 +4,21 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Linking from "expo-linking";
 import { BleManager } from "react-native-ble-plx";
+import base64 from "react-native-base64";
 
 const SERVICE_UUID = "12345678-1234-1234-1234-1234567890ab"; // Replace with your ESP32 Service UUID
 const CHARACTERISTIC_UUID = "abcd1234-abcd-1234-abcd-1234567890ab"; // Replace with your ESP32 Characteristic UUID
 const ESP32_WEBSOCKET_URL = "ws://192.168.4.1/ws"; // Replace with your ESP32 WebSocket URL
 
 const MapScreen = ({ route }) => {
-  const { device, useBLE } = route.params; // `useBLE` determines whether to use BLE or WebSocket
+  const { device, useBLE } = route.params || {}; // `useBLE` determines whether to use BLE or WebSocket
   const [trackerLocation, setTrackerLocation] = useState(null); // Tracker's real-time location
   const [routeCoordinates, setRouteCoordinates] = useState([]); // Store route coordinates
   const manager = new BleManager();
 
   useEffect(() => {
+    if (!device) return; // No device passed in (e.g. tapped the Map tab directly)
+
     if (useBLE) {
       connectToBLEDevice();
     } else {
@@ -27,7 +30,7 @@ const MapScreen = ({ route }) => {
         manager.destroy(); // Cleanup BLE manager
       }
     };
-  }, [useBLE]);
+  }, [useBLE, device]);
 
   // ----------- BLE Connection -----------
   const connectToBLEDevice = async () => {
@@ -46,7 +49,7 @@ const MapScreen = ({ route }) => {
           }
 
           const receivedData = characteristic.value; // Base64 encoded data
-          const decodedData = atob(receivedData); // Decode Base64
+          const decodedData = base64.decode(receivedData); // Decode Base64
           console.log("Received Data via BLE:", decodedData);
 
           // Parse and update GPS data
@@ -110,6 +113,14 @@ const MapScreen = ({ route }) => {
       Alert.alert("Error", "Failed to open Google Maps.");
     });
   };
+
+  if (!device) {
+    return (
+      <View style={styles.container}>
+        <Text>No device selected. Open a device from Home to track it here.</Text>
+      </View>
+    );
+  }
 
   if (!trackerLocation) {
     return (

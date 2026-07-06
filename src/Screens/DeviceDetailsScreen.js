@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 
 const DeviceDetailsScreen = ({ route, navigation }) => {
@@ -15,8 +16,14 @@ const DeviceDetailsScreen = ({ route, navigation }) => {
 
   const handleSaveName = async () => {
     try {
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid;
+      if (!userId) {
+        Alert.alert("Error", "You must be logged in to update a device.");
+        return;
+      }
+
       const db = getFirestore();
-      const userId = "currentUserId"; // Replace with the logged-in user's ID
       const deviceRef = doc(db, "users", userId, "devices", device.id);
 
       await updateDoc(deviceRef, { name: deviceName });
@@ -28,12 +35,15 @@ const DeviceDetailsScreen = ({ route, navigation }) => {
   };
 
   const navigateToMap = () => {
-    navigation.navigate("Map", {
-      device,
-      useBLE: true, // or false, depending on the connection type
-      serviceUuid: device.serviceUuid,
-      characteristicUuid: device.characteristicUuid,
-      websocketUrl: device.websocketUrl,
+    navigation.navigate("Main", {
+      screen: "Map",
+      params: {
+        device,
+        useBLE: true, // or false, depending on the connection type
+        serviceUuid: device.serviceUuid,
+        characteristicUuid: device.characteristicUuid,
+        websocketUrl: device.websocketUrl,
+      },
     });
   };
 

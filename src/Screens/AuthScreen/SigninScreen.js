@@ -11,7 +11,8 @@ const SignInScreen = ({ navigation }) => {
   const handleSignIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.replace("HomeScreen");
+      // No manual navigation needed: the auth state listener in
+      // src/Navigation/navigation.js swaps to the Main stack automatically.
     } catch (error) {
       setErrorMessage(error.message);
     }

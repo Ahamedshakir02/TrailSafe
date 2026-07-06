@@ -1,14 +1,14 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { 
-  FIREBASE_API_KEY, 
-  FIREBASE_AUTH_DOMAIN, 
-  FIREBASE_PROJECT_ID, 
-  FIREBASE_STORAGE_BUCKET, 
-  FIREBASE_MESSAGING_SENDER_ID, 
-  FIREBASE_APP_ID 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID
 } from "@env";
 
 // Validate environment variables
@@ -37,35 +37,14 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID,
 };
 
-let app;
-let auth;
-let db;
-let analytics;
+const app = initializeApp(firebaseConfig);
 
-try {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  
-  // Enable Firestore persistence
-  await enableIndexedDbPersistence(db)
-    .catch((err) => {
-      if (err.code === 'failed-precondition') {
-        console.warn("Multiple tabs open, persistence can only be enabled in one tab");
-      } else if (err.code === 'unimplemented') {
-        console.warn("The current environment does not support all features required for persistence");
-      }
-    });
-    
-  analytics = getAnalytics(app);
-} catch (error) {
-  console.error("Firebase initialization error:", error);
-  throw error;
-}
+// Firestore's IndexedDB persistence and firebase/analytics are browser-only APIs
+// and are not available in React Native, so they are intentionally not used here.
+// getReactNativePersistence keeps the signed-in user across app restarts.
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+const db = getFirestore(app);
 
-// Verify Firestore is properly initialized
-if (!db) {
-  throw new Error("Firestore failed to initialize");
-}
-
-export { auth, db, analytics };
+export { auth, db };

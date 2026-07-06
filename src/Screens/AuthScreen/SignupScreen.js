@@ -40,7 +40,8 @@ const SignupScreen = ({ navigation }) => {
       });
 
       Alert.alert("Success", "Account created successfully!");
-      navigation.replace("Profile"); // Redirect to Profile screen
+      // No manual navigation needed: the auth state listener in
+      // src/Navigation/navigation.js swaps to the Main stack automatically.
     } catch (error) {
       Alert.alert("Signup Failed", error.message);
     } finally {

@@ -22,18 +22,13 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "###AIzaSyCCbr9SAMz9QT_6MPtd1Mf8r9tBf2KGzjc"
+          "apiKey": "AIzaSyCCbr9SAMz9QT_6MPtd1Mf8r9tBf2KGzjc"
         }
       },
       "package": "com.anonymous.TailSafe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "config": {
-      "googleMaps": {
-        "apiKey": "AIzaSyCCbr9SAMz9QT_6MPtd1Mf8r9tBf2KGzjc"
-      }
     }
   }
 }
